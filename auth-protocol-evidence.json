@@ -1,0 +1,55 @@
+{
+  "source": "Installed MagnumGO 4.3.15 Android ARM64 libapp.so, exact Dart3.11.4 snapshot78da37fed6bf1489361a312568249f3f",
+  "sha256": "83a226c989e7f9cdbd08851ca69d95654ec6817f696f669da1527cbea5898ad6",
+  "tool": "Official worawit/blutter built locally against exact Dart runtime",
+  "second_request": {
+    "native_entry": "0x8bb984",
+    "method": "POST",
+    "path": "/auth/server/api/v1/security/customers/registration/move/second",
+    "content_type": "application/json",
+    "body": {
+      "phone": "phone argument",
+      "pin": "0123",
+      "smsCode": "code argument"
+    },
+    "evidence": {
+      "array_length_smi12_means_six_elements": "0x8bb9b4-0x8bb9bc",
+      "phone_pair": "0x8bb9c0-0x8bb9d0",
+      "pin_pair": "0x8bb9d4-0x8bb9e8",
+      "smsCode_pair": "0x8bb9ec-0x8bb9fc",
+      "http_method": "0x8bba4c-0x8bba54",
+      "content_type": "0x8bba58-0x8bba5c",
+      "endpoint": "0x8bba84-0x8bba9c"
+    }
+  },
+  "pool": {
+    "0xcfe0": "phone",
+    "0x16958": "pin",
+    "0x16960": "0123",
+    "0x16968": "smsCode",
+    "0x16978": "/auth/server/api/v1/security/customers/registration/move/second"
+  },
+  "success_response": {
+    "native_parser": "0x5e50c8",
+    "root_fields": [
+      "refreshToken",
+      "token"
+    ],
+    "field_reads": [
+      "0x5e50f4-0x5e5104",
+      "0x5e5150-0x5e5160"
+    ]
+  },
+  "limitations": [
+    "Hardcoded pin is an application protocol constant, not a recovered user phone PIN.",
+    "JWT parsing provides local routing/integrity checks; the service verifies the actual token."
+  ],
+  "live_verification": {
+    "date": "2026-10-29",
+    "user_completed_browser_login": true,
+    "encrypted_user_session_saved": true,
+    "authenticated_profile_http_status": 200,
+    "refresh_http_status": 200,
+    "credentials_recorded_in_artifacts": false
+  }
+}

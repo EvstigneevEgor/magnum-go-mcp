@@ -1,0 +1,99 @@
+{
+  "geo": {
+    "darkStore": {
+      "id": 5002,
+      "name": "DS3 Маркет Холл",
+      "code": "MHall",
+      "backServerAddress": "mgo",
+      "typeId": 2001
+    },
+    "b2bStore": {
+      "id": 5005201,
+      "name": "г. Алматы, Кульджинка-2 B2B",
+      "code": "5005-B2B",
+      "backServerAddress": "mgo",
+      "typeId": 3001
+    }
+  },
+  "platformId": 5002,
+  "categories": [
+    {
+      "id": 60,
+      "name": "Акции",
+      "imgName": "https://s3-pic.e-magnum.kz/category/ecom/60-3.jpg",
+      "orderId": 2,
+      "askAge": false
+    },
+    {
+      "id": 11,
+      "name": "Продукты",
+      "imgName": "https://s3-pic.e-magnum.kz/category/ecom/11-5.jpg",
+      "orderId": 12,
+      "askAge": false
+    },
+    {
+      "id": 18,
+      "name": "Вода, напитки",
+      "imgName": "https://s3-pic.e-magnum.kz/category/ecom/18-1.jpg",
+      "orderId": 18,
+      "askAge": false
+    },
+    {
+      "id": 15,
+      "name": "Красота и здоровье",
+      "imgName": "https://s3-pic.e-magnum.kz/category/ecom/15-3.png",
+      "orderId": 159,
+      "askAge": false
+    },
+    {
+      "id": 14,
+      "name": "Товары для детей",
+      "imgName": "https://s3-pic.e-magnum.kz/category/ecom/14-5.jpg",
+      "orderId": 189,
+      "askAge": false
+    },
+    {
+      "id": 16,
+      "name": "Бытовая химия и уборка",
+      "imgName": "https://s3-pic.e-magnum.kz/category/ecom/16-3.png",
+      "orderId": 201,
+      "askAge": false
+    },
+    {
+      "id": 17,
+      "name": "Дом, авто, сад",
+      "imgName": "https://s3-pic.e-magnum.kz/category/ecom/17.png",
+      "orderId": 232,
+      "askAge": false
+    },
+    {
+      "id": 13,
+      "name": "Товары для животных",
+      "imgName": "https://s3-pic.e-magnum.kz/category/ecom/13-3.png",
+      "orderId": 284,
+      "askAge": false
+    },
+    {
+      "id": 12,
+      "name": "Алкоголь",
+      "imgName": "https://s3-pic.e-magnum.kz/category/ecom/12-2.jpg",
+      "orderId": 311,
+      "askAge": true
+    },
+    {
+      "id": 70,
+      "name": "Помогать легко",
+      "descr": "Помогать легко!\nЭти социальные корзины собраны специально для адресной социальной помощи совместно с фондом «Добрые дела»\n\nМы сами доставим заказа нуждающемуся пенсионеру и отправим вам уведомление с отчетом. Также все фотоотчеты можно увидеть на @dobrye_dela_almaty.\nБлагодарим вас за помощь!",
+      "imgName": "https://s3-pic.e-magnum.kz/category/ecom/70.jpg",
+      "orderId": 400,
+      "askAge": false
+    }
+  ],
+  "suggestions": [
+    "хлеб",
+    "хлеба",
+    "хлебцы",
+    "хлебные",
+    "хлебная"
+  ]
+}

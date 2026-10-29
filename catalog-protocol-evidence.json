@@ -1,0 +1,392 @@
+{
+  "schema_version": 1,
+  "source": {
+    "application": "MagnumGO",
+    "version": "4.3.15",
+    "architecture": "ARM64",
+    "dart_version": "3.11.4",
+    "library": "lib/arm64-v8a/libapp.so",
+    "library_sha256": "83a226c989e7f9cdbd08851ca69d95654ec6817f696f669da1527cbea5898ad6",
+    "analysis": "Blutter object pool with manual Capstone ARM64 reconstruction of request builders and calling repositories/cubits",
+    "address_format": "hexadecimal native virtual address in the exact libapp.so; .text VA and file offset begin at 0x2f0000",
+    "network_requests": 0,
+    "artifact_note": "Artifact names identify the original private analysis notes, not files distributed with this source. The APK and disassembly are not bundled; function addresses and binary hashes preserve the technical provenance."
+  },
+  "scope": {
+    "observed": "Exact request maps constructed by the Android application; no server-side requiredness or acceptance claims.",
+    "common": {
+      "method": "GET",
+      "content_type": "application/json",
+      "body": null,
+      "dio_options_extra": {
+        "accessToken": true
+      },
+      "extra_note": "accessToken is an internal Dio extra, not a query parameter or an HTTP header. Existing app interceptors add authorization."
+    },
+    "null_query_note": "Categories query contains parentId:null for the root. This static recovery does not establish final URL serialization of null by Dio.",
+    "response_note": "Generated client methods return Dio Response. Repository parsing accesses response.data; no live response was collected.",
+    "client_limits_note": "Python mixin bounds page at 10000, query at 256 characters, filter count at 100 and positive IDs at signed int64. These are local validation choices, not APK/server limits."
+  },
+  "contracts": {
+    "catalog_categories": {
+      "method": "GET",
+      "path": "/catalog/client/catalog",
+      "body": null,
+      "native_entry": "0x892530",
+      "repository_entry": "0x8922f4",
+      "query": {
+        "includeChildNodes": {
+          "type": "bool",
+          "fixed": true,
+          "evidence": "0x892574-0x892580; x22(null)+0x20 is canonical Dart true"
+        },
+        "parentId": {
+          "type": "int?",
+          "default": null,
+          "evidence": "0x892588-0x892594; repository named optional parentId defaults null at 0x892314-0x892344"
+        },
+        "platformId": {
+          "type": "int",
+          "default_if_no_selected_store": 5002,
+          "evidence": "0x89259c-0x8925bc; selected store lookup 0x892380-0x8923ac; fallback mov x4,#0x138a at 0x8923b8"
+        }
+      },
+      "behavior": "Use the same endpoint with parentId to list subcategories; includeChildNodes remains true.",
+      "request_evidence": {
+        "map_constructor": "0x8925cc",
+        "method_GET": "0x892640",
+        "content_type": "0x892650",
+        "endpoint": "0x892664",
+        "query_parameters_call": "0x892678-0x89267c"
+      },
+      "assembly": [
+        "categories.asm",
+        "categories_caller.asm"
+      ]
+    },
+    "catalog_search_products": {
+      "method": "GET",
+      "path": "/catalog/client/search/platform/items",
+      "body": null,
+      "native_entry": "0x8b42c8",
+      "repository_entry": "0x8b4094",
+      "query": {
+        "platformId": {
+          "type": "int",
+          "default_if_no_selected_store": 5002,
+          "evidence": "0x8b4310-0x8b4330; repository fallback 0x8b4120"
+        },
+        "searchWord": {
+          "type": "String",
+          "evidence": "0x8b4338-0x8b4344"
+        },
+        "pageId": {
+          "type": "int",
+          "initial": 0,
+          "evidence": "0x8b434c-0x8b436c; reset xzr at 0x8b480c, load 0x8b4864, params field 0x8b487c"
+        },
+        "pageSize": {
+          "type": "int",
+          "fixed": 20,
+          "evidence": "0x8b4374-0x8b4380; Smi #0x28 represents Dart integer 20"
+        }
+      },
+      "pagination": {
+        "base": 0,
+        "page_size": 20,
+        "increment": 1,
+        "evidence": "load-more add #1 at 0x8b3eb4; stores page 0x8b3f58; compares result length to #0x14 at 0x8b3fac"
+      },
+      "response": {
+        "shape": "paged object",
+        "content_field": "content",
+        "evidence": "repository 0x8b4174 and 0x8b41a8 reads data[content]"
+      },
+      "request_evidence": {
+        "method_GET": "0x8b4404",
+        "content_type": "0x8b4414",
+        "endpoint": "0x8b4428",
+        "query_parameters_call": "0x8b443c"
+      },
+      "pitfalls": [
+        "Query parameter is pageId, not page.",
+        "searchKeyWords belongs to analytics search_submitted at 0x8b4590, not the HTTP query."
+      ],
+      "assembly": [
+        "search.asm",
+        "search_caller.asm",
+        "search_state.asm",
+        "search_initial.asm"
+      ]
+    },
+    "catalog_suggest_products": {
+      "method": "GET",
+      "path": "/catalog/client/search/lean/items",
+      "body": null,
+      "native_entry": "0x8b4cdc",
+      "query": {
+        "searchWord": {
+          "type": "String?",
+          "evidence": "0x8b4d18-0x8b4d24; map type <String,String?> at 0x8b4d2c"
+        }
+      },
+      "response": {
+        "shape": "list of strings",
+        "evidence": "repository validates List at 0x8b4c40; casts map to <String> at 0x8b4c70"
+      },
+      "request_evidence": {
+        "pair_array_length": "0x8b4d0c: Smi #4, representing two elements/one pair",
+        "map_constructor": "0x8b4d34",
+        "method_GET": "0x8b4da8",
+        "content_type": "0x8b4db8",
+        "endpoint": "0x8b4dcc",
+        "query_parameters_call": "0x8b4de0"
+      },
+      "pitfalls": [
+        "Exactly one query pair. The application does not add platformId, merchantId, page, pageId or pageSize.",
+        "API builder accepts a nullable String; the Python client requires a nonblank query as a local input policy."
+      ],
+      "assembly": [
+        "suggest.asm",
+        "suggest_caller.asm"
+      ]
+    },
+    "catalog_list_products": {
+      "method": "GET",
+      "path": "/catalog/client/platformItemV2",
+      "body": null,
+      "native_entry": "0x893824",
+      "repository_entry": "0x8934a8",
+      "query": {
+        "platformId": {
+          "type": "int",
+          "default_if_no_selected_store": 5002,
+          "evidence": "0x89390c-0x89392c; repository fallback 0x893558"
+        },
+        "categoryIds": {
+          "type": "int",
+          "evidence": "0x893958-0x893978 boxes one raw integer directly, not an iterable or CSV"
+        },
+        "sortTypeColumn": {
+          "type": "String",
+          "default": "price",
+          "evidence": "optional SortItem field at 0x89389c-0x8938a4; null fallback 0x8938a8-0x8938b4; query key 0x8939a4"
+        },
+        "sortOrder": {
+          "type": "String",
+          "default": "DESC",
+          "confirmed_values": [
+            "DESC",
+            "ASC"
+          ],
+          "evidence": "0x8938c0-0x8938dc; canonical SortOrder.desc uses DESC, other enum uses ASC"
+        },
+        "pageId": {
+          "type": "int",
+          "initial": 0,
+          "evidence": "0x893a14-0x893a34; page reset xzr 0x892ea4, load 0x892ed0, params field 0x892f00"
+        },
+        "pageSize": {
+          "type": "int",
+          "fixed": 20,
+          "evidence": "0x893a60-0x893a6c; Smi #0x28 represents integer 20"
+        },
+        "filterIds": {
+          "type": "String",
+          "empty_list_value": "",
+          "encoding": "map each ID to String, join with comma",
+          "evidence": "0x893a74-0x893ac0; _objectToString closure, map and join(',')"
+        }
+      },
+      "pagination": {
+        "base": 0,
+        "page_size": 20,
+        "increment": 1,
+        "evidence": "initial page reset 0x892ea4; load-more reads page 0x893c10 and adds 1 at 0x893c14"
+      },
+      "response": {
+        "shape": "paged object",
+        "content_field": "content",
+        "evidence": "repository reads data[content] at 0x8935bc, 0x8935f4 and 0x893700"
+      },
+      "request_evidence": {
+        "method_GET": "0x893b64",
+        "content_type": "0x893b74",
+        "endpoint": "0x893b88",
+        "query_parameters_call": "0x893b9c"
+      },
+      "pitfalls": [
+        "categoryIds is one integer despite its plural name.",
+        "filterIds is CSV, and remains present as an empty string when the filter list is empty.",
+        "Only price is statically confirmed as a sort column here. The server may support other columns, but this evidence does not prove them."
+      ],
+      "assembly": [
+        "products.asm",
+        "products_caller.asm",
+        "products_initial.asm",
+        "grid_state.asm"
+      ]
+    },
+    "catalog_product_detail": {
+      "method": "GET",
+      "path": "/catalog/client/platformItem/{item_id}",
+      "body": null,
+      "native_entry": "0x8af4a0",
+      "repository_entry": "0x8af3d0",
+      "path_parameters": {
+        "item_id": {
+          "type": "int",
+          "source": "Product.itemId from normal search/catalog navigation",
+          "evidence": "Product parser writes itemId field+7 at 0x4c5848. Search tap reads Product+7 at 0x5a7290; catalog tap reads Product+7 at 0x64b398. Navigator 0x5a7360 passes that ID through Screen.fieldB with field17=0; use case 0x5b8c10 sends Params.field7 to primary route."
+        }
+      },
+      "query": {},
+      "request_evidence": {
+        "method_GET": "0x8af54c",
+        "content_type": "0x8af55c",
+        "request_call": "0x8af578 has three positional arguments, no queryParameters"
+      },
+      "response": {
+        "shape": "nullable product object",
+        "evidence": "repository 0x8af3d0 casts response.data to Map<String,dynamic>?; product parser 0x4c4a90"
+      },
+      "pitfalls": [
+        "Route name platformItem does not imply availabilityId. App normal search/catalog taps pass Product.itemId directly.",
+        "The distinct /platformItem/item/{id} route belongs to the deeplink branch; it is not an error-recovery fallback."
+      ],
+      "assembly": [
+        "details_api.asm",
+        "detail.asm",
+        "product_parser.asm",
+        "detail_navigation.asm"
+      ],
+      "behavior": "Normal product detail request. Input is the result object Product.itemId, despite platformItem in the endpoint name. Sends no platformId query.",
+      "navigation_evidence": {
+        "search_product_item_id": "0x5a7290 loads Product.field7; 0x5a7320-0x5a732c unboxes it; 0x5a733c calls normal navigator",
+        "catalog_product_item_id": "0x64b398 loads Product.field7; 0x64b3bc moves it into x5; source=catalog 0x64b3c8; navigation call 0x64b3d0",
+        "normal_navigation": "0x5a744c stores passed itemId at Screen.fieldB; 0x5a7458 stores zero at Screen.field17",
+        "screen_to_cubit": "0x64d40c loads Screen.fieldB as x3 and 0x64d410 loads field17 as x2; calls 0x8b3950",
+        "cubit_to_params": "0x8b39ac Params.field7=x3 and 0x8b39b4 Params.fieldF=x2",
+        "branch": "0x5b8b8c reads Params.fieldF; zero branches 0x5b8c08, reads Params.field7 at 0x5b8c10, calls primary repository0x8af3d0 at0x5b8c1c"
+      }
+    },
+    "catalog_product_by_item": {
+      "method": "GET",
+      "path": "/catalog/client/platformItem/item/{item_id}",
+      "body": null,
+      "native_entry": "0x8af660",
+      "repository_entry": "0x8af588",
+      "path_parameters": {
+        "item_id": {
+          "type": "int",
+          "evidence": "URL helper 0x5b8ca8 concatenates prefix 0x5b8cdc with integer; called at 0x8af71c"
+        }
+      },
+      "query": {
+        "platformId": {
+          "type": "int",
+          "evidence": "0x8af6b0-0x8af6d0, map <String,int>"
+        }
+      },
+      "request_evidence": {
+        "method_GET": "0x8af75c",
+        "content_type": "0x8af76c",
+        "query_parameters_call": "0x8af790"
+      },
+      "response": {
+        "shape": "nullable product object",
+        "evidence": "repository 0x8af588 casts response.data to Map<String,dynamic>?; product parser 0x4c4a90"
+      },
+      "assembly": [
+        "details_api.asm",
+        "detail.asm",
+        "product_parser.asm",
+        "detail_navigation.asm"
+      ],
+      "behavior": "Explicit deeplink branch. In-app normal search/catalog navigation uses catalog_product_detail instead.",
+      "python_helper": "product_detail_from_deeplink(item_id, platform_id); compatibility alias product_by_item(item_id, platform_id)",
+      "navigation_evidence": {
+        "deeplink": "0x4cf554 stores parsed URL id in Screen.fieldB and0x4cf564 in Screen.field17, so Params.fieldF is nonzero",
+        "branch": "0x5b8b8c-0x5b8b94 reads nonzero Params.fieldF; selected store from AddressService0x5b8bb0, store.id0x5b8bc4, fallback5002 at0x5b8bd8; calls by-item repository0x8af588 at0x5b8bf8",
+        "complete_uri": "0x5b8ca8-0x5b8d10 concatenates exactly prefix /catalog/client/platformItem/item/ and integer. No trailing slash or additional segment."
+      },
+      "pitfalls": [
+        "Not a fallback for normal-detail failures. Server acceptance has not been established by this static analysis."
+      ]
+    },
+    "catalog_category_name_observed_only": {
+      "method": "GET",
+      "path": "/catalog/client/category/id",
+      "body": null,
+      "native_entry": "0x8afd1c",
+      "repository_entry": "0x8afc58",
+      "query": {
+        "categoryId": {
+          "type": "int",
+          "evidence": "0x8afd5c-0x8afd7c"
+        }
+      },
+      "request_evidence": {
+        "method_GET": "0x8afdfc",
+        "content_type": "0x8afe0c",
+        "endpoint": "0x8afe20",
+        "query_parameters_call": "0x8afe34"
+      },
+      "response": {
+        "repository_return": "response.data['name'] or empty string",
+        "evidence": "String type 0x8afc7c, name literal 0x8afcb4, fallback 0x8afcdc"
+      },
+      "pitfalls": [
+        "This request returns a category/name; it is not a children list. Not exposed in CatalogMethods."
+      ],
+      "assembly": [
+        "subcategories.asm"
+      ]
+    }
+  },
+  "product_response_keys": {
+    "parser_entry": "0x4c4a90",
+    "keys": {
+      "itemId": "0x4c4ad8",
+      "availabilityId": "0x4c4b78",
+      "price": "0x4c4c18",
+      "measureUnit": "0x4c4cb8",
+      "mainImg": "0x4c4da4",
+      "imgList": "0x4c4e04",
+      "name": "0x4c4f04",
+      "descr": "0x4c4f80",
+      "platformId": "0x4c4fe0",
+      "barcodes": "0x4c5080",
+      "state": "0x4c5180",
+      "isPromo": "0x4c5268",
+      "extId": "0x4c52e0",
+      "isFavorite": "0x4c5380",
+      "discount": "0x4c53f8",
+      "grossWeight": "0x4c54e4"
+    },
+    "assembly": "product_parser.asm"
+  },
+  "price_representation": {
+    "raw_field": "price",
+    "currency": "KZT",
+    "currency_basis": "Product UI appends the Kazakhstan tenge symbol ₸.",
+    "raw_units_per_display_tenge": 100,
+    "conversion": "Decimal(raw_price) / Decimal(100)",
+    "raw_value_retained": true,
+    "minor_unit_name_in_apk": null,
+    "minor_unit_name_note": "TIYN is not a literal unit name recovered from the APK; exact static proof is raw/100 followed by the ₸ symbol.",
+    "field_evidence": "Product.fromJson reads JSON[price] at0x4c4c18 and stores the unchanged numeric amount in Product.fieldF at0x4c5858.",
+    "ui_conversion_evidence": "Product detail UI0x64def8 reads Product.fieldF0x64e0f8; unboxes0x64e114-0x64e120; loads PP+0xbdf8 double100 at0x64e12c; divides fdiv d2,d1,d0 at0x64e134; allocates SingleProductPrice at0x64e148; stores divided value widget.fieldB at0x64e154.",
+    "constant_evidence": "PP+0xbdf8 is IMM double(100), IEEE754 bits0x4059000000000000.",
+    "widget_type_evidence": "Allocation helper0x8c69d4 uses class tag0x128f21c, class id4751=SingleProductPrice from package common/ui/components/price/single_product_price.dart.",
+    "display_evidence": "SingleProductPrice build0x6389d8 calls toStringAsFixed(0) at0x638a34 and appends literal space+₸ from PP+0x1cfb0 at0x638a58.",
+    "discount_evidence": "Discount.prevPrice loaded at0x64e058 is divided by same100 constant at0x64e080-0x64e088 and passed to OldPrice widget4752.",
+    "example": {
+      "raw_price": 35000,
+      "display_tenge": "350",
+      "symbol": "₸"
+    },
+    "scope": "Proves Product.price and displayed discount.prevPrice scale. Other numeric fields or arbitrary cart totals must be checked independently before conversion.",
+    "assembly": "price_scale.asm"
+  }
+}

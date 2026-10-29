@@ -1,0 +1,57 @@
+{
+  "package": "kz.magnum.go.android",
+  "version_name": "4.3.15",
+  "version_code": 100808,
+  "installer": "com.android.vending",
+  "acquisition": "Copied installed APK via authorized ADB from user phone through existing SSH connection. No app data extracted.",
+  "apk_certificate_sha1": "9568493fd849875f2ef3c41ae132b7a4ed1ff994",
+  "note": "Certificate extracted from APK v2 signing block; full cryptographic APK content verification not performed.",
+  "files": [
+    {
+      "file": "base.apk",
+      "size": 16360893,
+      "sha256": "c86dbaee18a7df7a3c01b032114a772c94af97df56c9464191d3950d309e9ced",
+      "entries": 1037,
+      "native": []
+    },
+    {
+      "file": "split_config.arm64_v8a.apk",
+      "size": 54383693,
+      "sha256": "60993ed59787032ce319a08b29b6b263d3b4bd76bd2957497d819c07942132ca",
+      "entries": 15,
+      "native": [
+        "lib/arm64-v8a/libapp.so",
+        "lib/arm64-v8a/libc++_shared.so",
+        "lib/arm64-v8a/libdartjni.so",
+        "lib/arm64-v8a/libdatastore_shared_counter.so",
+        "lib/arm64-v8a/libflutter.so",
+        "lib/arm64-v8a/libjniPdfium.so",
+        "lib/arm64-v8a/libmaps-mobile.so",
+        "lib/arm64-v8a/libmodft2.so",
+        "lib/arm64-v8a/libmodpdfium.so",
+        "lib/arm64-v8a/libmodpng.so"
+      ]
+    },
+    {
+      "file": "split_config.en.apk",
+      "size": 49561,
+      "sha256": "34cd5b8b17edbafe11e45c511d638dad178056f03ec9ddf53267531960ff59f8",
+      "entries": 6,
+      "native": []
+    },
+    {
+      "file": "split_config.ru.apk",
+      "size": 29081,
+      "sha256": "a1dc28017fd53eac81687d0482f2b100397c8b0754cc4fb44e06844930749e67",
+      "entries": 6,
+      "native": []
+    },
+    {
+      "file": "split_config.xxhdpi.apk",
+      "size": 236992,
+      "sha256": "e1a71e12e4b20dc57f9cafc33ad54f455ee29e53742c0a1c04260950c558a538",
+      "entries": 75,
+      "native": []
+    }
+  ]
+}

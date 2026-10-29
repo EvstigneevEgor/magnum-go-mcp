@@ -1,0 +1,23 @@
+{
+  "mcpServers": {
+    "magnum-go": {
+      "command": "ssh",
+      "args": [
+        "-T",
+        "-o",
+        "BatchMode=yes",
+        "-o",
+        "ConnectTimeout=10",
+        "-o",
+        "StrictHostKeyChecking=yes",
+        "<user>@pi-host",
+        "/opt/magnum-go-mcp/.venv/bin/python",
+        "/opt/magnum-go-mcp/magnum_mcp.py"
+      ],
+      "env": {
+        "PROGRAMDATA": "C:\\ProgramData",
+        "ALLUSERSPROFILE": "C:\\ProgramData"
+      }
+    }
+  }
+}

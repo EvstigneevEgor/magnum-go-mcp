@@ -1,0 +1,178 @@
+{
+  "provenance": {
+    "app": "MagnumGO Android 4.3.15",
+    "source": "lib/arm64-v8a/libapp.so",
+    "analysis": "Static ARM64 AOT disassembly with Blutter PP annotations; no network requests, application state, credentials, browser, or user data inspected",
+    "address_notation": "ELF virtual addresses, hexadecimal",
+    "artifact_note": "Artifact names identify the original private analysis notes, not files distributed with this source. The APK and disassembly are not bundled; function addresses and binary hashes preserve the technical provenance."
+  },
+  "authorization": {
+    "request_opt_in": "Dio Options.extra contains key accessToken",
+    "header": "Authorization",
+    "value": "TokenStoreService.tokenModel.token, unmodified (the response token contains its Bearer prefix)",
+    "token_model_fields": {
+      "refreshToken": "off7",
+      "token": "offb"
+    },
+    "evidence": [
+      "auth-interceptor.asm",
+      "auth-interceptor-extra-contains-key.asm",
+      "token-model-parser.asm"
+    ],
+    "addresses": {
+      "interceptor": "0x7a7694",
+      "contains_extra_key": "0x7a76dc",
+      "read_access_token": "0x7a7710",
+      "write_header": "0x7a7734"
+    }
+  },
+  "profile": {
+    "method": "GET",
+    "path": "/auth/server/api/v1/customers/customer/{phone}",
+    "path_parameter": "Exactly the same phone string passed to /security/second in the successful SMS login flow",
+    "query": null,
+    "body": null,
+    "authenticated": true,
+    "response": "Root Customer object, parsed at 0x5e6890; fields include id:int?, name:String?, surname:String?, cellPhone:String?, email:String?",
+    "identity_warning": "JWT userId and Customer.id are not the login-flow path argument. After fetching Customer by phone, AuthSmsCubit stores returned Customer.id as SharedPrefs userId.",
+    "argument_proof": [
+      "AuthSmsCubit 0x8bb094 saves argument A=x2 at fp-0x88 and B=x3 at fp-0x90.",
+      "It creates VerifyCodeParams with off7=B and offb=A (0x8bb0e0, 0x8bb0e8).",
+      "VerifyCodeUseCase 0x5e6b98 calls repository 0x8bb7c4 with x2=B and x3=A.",
+      "Repository swaps x2 and x3 at 0x8bb7d8..0x8bb7e0 and calls API 0x8bb984 at 0x8bb814, therefore API receives x2=A and x3=B.",
+      "API 0x8bb984 serializes x2 under phone and x3 under smsCode, proving A is phone.",
+      "On verification success, Cubit passes original A directly to 0x8bb598 at 0x8bb16c/0x8bb170.",
+      "Function 0x8bb598 calls GetCustomerUseCase 0x5e6858 with that same x2 at 0x8bb5d4; wrapper and repository pass x2 unchanged to AuthApi 0x8bb6d8.",
+      "AuthApi passes supplied x2 to URL builder 0x5e6b3c, which concatenates customer path prefix with the argument; GET appears at 0x8bb784.",
+      "Function 0x8bb598 reads returned Customer.off7 (Customer.id) at 0x8bb5ec and stores it as SharedPrefs userId at 0x8bb604..0x8bb608."
+    ],
+    "evidence": [
+      "profile-phone-after-sms.asm",
+      "verify-usecase-argument-mapping.asm",
+      "verify-repository-argument-swap.asm",
+      "verify-api-phone-and-sms-code-map.asm",
+      "profile-fetch-and-store-customer-id.asm",
+      "profile-usecase.asm",
+      "profile-repository-and-api.asm",
+      "profile-url-builder.asm",
+      "customer-parser.asm"
+    ]
+  },
+  "refresh": {
+    "method": "POST",
+    "path": "/auth/server/api/v1/security/tokens/refresh",
+    "content_type": "application/json",
+    "query": null,
+    "body": {
+      "refreshToken": "raw stored refreshToken string",
+      "token": "raw stored access token string"
+    },
+    "authenticated": false,
+    "authorization_detail": "Options.extra has no accessToken key, so AuthInterceptor adds no Authorization header",
+    "source": "Refresh function 0x8ba834 reads TokenStoreService.offf TokenModel; model.offb => x2 access token, model.off7 => x3 refresh token; API 0x5e4c14 maps x3 to refreshToken and x2 to token",
+    "success": "HTTP200, root response parsed with TokenModel parser 0x5e50c8, then both fields saved via 0x8ba9b0",
+    "normalization_note": "If the implementation strips Bearer prefixes when storing tokens, reconstruct the original raw token strings before mirroring this request. APK does not normalize either field.",
+    "evidence": [
+      "refresh-api.asm",
+      "refresh-token-model-source.asm",
+      "token-model-parser.asm",
+      "auth-interceptor.asm"
+    ]
+  },
+  "last_location": {
+    "method": "GET",
+    "path": "/auth/server/api/v1/customers/locations/last",
+    "content_type": "application/json",
+    "query": null,
+    "body": null,
+    "authenticated": true,
+    "api_function": "0x873b0c",
+    "request_call": "0x873bcc",
+    "response": "Root CustomerAddress object; no embedded store fields in the app model",
+    "response_fields": [
+      "id",
+      "name",
+      "userTitle",
+      "location",
+      "address",
+      "comments",
+      "customerId",
+      "deliveryAvailable",
+      "state"
+    ],
+    "geographic_point": {
+      "json_path": "location.geometry.coordinates",
+      "latitude": "first element",
+      "longitude": "last element",
+      "proof": "0x87337c reads CustomerAddress.off13 location -> Location.offb geometry -> Geometry.offb coordinates; first via 0x42f2e8 to LatLng.off7 then query latitude; last via 0x417084 to LatLng.offf then query longitude",
+      "note": "Mirror this app's coordinate ordering; do not automatically swap to longitude/latitude based on GeoJSON conventions. For automatic selection require exactly two valid finite numbers; omit fallback when no usable saved point."
+    },
+    "evidence": [
+      "last-location.asm",
+      "last-location-response-parser.asm",
+      "customer-address-parser.asm",
+      "customer-address-serializer.asm",
+      "geometry-serializer.asm",
+      "address-coordinates-to-geo-query.asm",
+      "list-first.asm",
+      "list-last.asm"
+    ]
+  },
+  "saved_locations": {
+    "method": "GET",
+    "path": "/auth/server/api/v1/customers/locations",
+    "content_type": "application/json",
+    "query": null,
+    "body": null,
+    "authenticated": true,
+    "api_function": "0x873d54",
+    "request_call": "0x873e14",
+    "evidence": [
+      "saved-locations.asm"
+    ]
+  },
+  "geo_attributes": {
+    "method": "GET",
+    "path": "/productstore/geo/api/v1/type/all/attributes",
+    "query": {
+      "latitude": "double argument d0",
+      "longitude": "double argument d1"
+    },
+    "body": null,
+    "authenticated": false,
+    "api_function": "0x8736e4",
+    "request_call": "0x873820",
+    "response": {
+      "root_keys": [
+        "darkStore",
+        "expressStore",
+        "b2bStore",
+        "corpB2bStore"
+      ],
+      "store_object_fields": [
+        "id",
+        "name",
+        "code",
+        "typeId",
+        "titleMessage"
+      ],
+      "store_selection": {
+        "main": "darkStore",
+        "express": "expressStore",
+        "b2b": "b2bStore or corpB2bStore, depending service flag"
+      },
+      "selected_store_id": "JSON id, object.off7; /cart/merchant merchantId and /cart/v2/bymerchant platformId both receive this same selected currentShop.id",
+      "platform_id_proof": "0x8a5f2c calls currentShop 0x378df8, 0x8a5f40 reads shop.off7, 0x8a5f78 calls usecase 0x595ab0, 0x595ad0 calls repository 0x8a6a24, 0x8a6a64 calls API 0x8a6aec, API serializes platformId at 0x8a6b40..0x8a6b60",
+      "note": "Do not substitute code or typeId for the selected store id."
+    },
+    "evidence": [
+      "geo-attributes.asm",
+      "store-serializers.asm",
+      "current-store-selection.asm",
+      "selected-store-to-merchant-query.asm",
+      "selected-store-to-platform-cart.asm",
+      "platform-cart-usecase.asm",
+      "platform-cart-repository.asm"
+    ]
+  }
+}

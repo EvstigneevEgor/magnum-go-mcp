@@ -1,0 +1,157 @@
+{
+  "date": "2026-10-29",
+  "target": "Raspberry Pi, Linux aarch64, Python 3.13.5, systemd 257",
+  "offline_suite_on_pi": {
+    "tests": 199,
+    "passed": 199,
+    "skipped": 0,
+    "failed": 0,
+    "mcp_sdk": "2.3.0",
+    "real_magnum_requests": 0
+  },
+  "rate_policy_regression_on_pi": {
+    "tests": 21,
+    "passed": 21,
+    "skipped": 0,
+    "failed": 0,
+    "configured_default_seconds": 0.5,
+    "real_magnum_requests": 0
+  },
+  "live_user_auth": {
+    "browser_login": true,
+    "user_entered_phone_and_sms": true,
+    "encrypted_session_saved": true,
+    "profile_http_status": 200,
+    "personal_values_displayed": false
+  },
+  "live_reads": {
+    "profile": {
+      "http_status": 200
+    },
+    "last_delivery_address": {
+      "http_status": 200,
+      "address_or_coordinates_displayed": false
+    },
+    "resolve_stores": {
+      "http_status": 200,
+      "authorization_header": false
+    },
+    "categories": {
+      "http_status": 200,
+      "root_count": 10
+    },
+    "search_products": {
+      "http_status": 200,
+      "page_id": 0,
+      "page_size": 20,
+      "exact_repeat_from_cache": true
+    },
+    "category_products": {
+      "http_status": 200,
+      "product_count": 15
+    },
+    "product_detail": {
+      "http_status": 200,
+      "normal_app_route": "/catalog/client/platformItem/{Product.itemId}",
+      "query_parameters": []
+    },
+    "suggest": {
+      "http_status": 200,
+      "suggestion_count": 5
+    },
+    "cart": {
+      "http_status": 200,
+      "items_changed": false
+    },
+    "merchant_delivery": {
+      "http_status": 200
+    }
+  },
+  "live_refresh": {
+    "http_status": 200,
+    "attempts": 1,
+    "access_rotated": true,
+    "refresh_rotated": true,
+    "encrypted_pair_saved": true,
+    "subsequent_profile_http_status": 200
+  },
+  "rate_policy": {
+    "minimum_seconds_between_starts": 0.5,
+    "parallel_magnum_requests": false,
+    "linux_process_shared_lock": true,
+    "automatic_http_retries": false,
+    "automatic_pagination": false,
+    "background_polling": false,
+    "cart_read_cache": false,
+    "http_429_shared_cooldown": true,
+    "configuration": {
+      "local_file": "magnum.config.json",
+      "explicit_file_environment": "MAGNUM_CONFIG",
+      "interval_environment": "MAGNUM_REQUEST_INTERVAL_SECONDS",
+      "loading": "once before first HTTP request"
+    }
+  },
+  "stdio_mcp": {
+    "transport": "stdio over SSH",
+    "tool_count": 14,
+    "tools": [
+      "auth_status",
+      "categories",
+      "delivery_context",
+      "list_products",
+      "merchant_delivery",
+      "product",
+      "profile_status",
+      "read_cart",
+      "refresh_session",
+      "remove_cart_item",
+      "search",
+      "set_cart_quantity",
+      "start_login",
+      "suggest"
+    ],
+    "ready_user": true,
+    "product_schema_verified": true,
+    "cart_revision_schema_verified": true,
+    "magnum_http_requests": 0,
+    "credentials_displayed": false
+  },
+  "live_linux_crypto": {
+    "ssh_roundtrip": true,
+    "transient_systemd_user_service_roundtrip": true,
+    "synthetic_records_for_crypto_probes": true
+  },
+  "browser_form_origin_regression": {
+    "referrer_policy": "same-origin",
+    "real_browser_fake_backend_submit": true,
+    "origin_null_rejected": true,
+    "real_sms_sent_by_probe": false
+  },
+  "login_page_total_timeout_seconds": null,
+  "login_ui_footer_removed": true,
+  "limits": [
+    "refresh is explicit, not automatic",
+    "cart operation_id journal lasts for one MCP process",
+    "no order placement or payment"
+  ],
+  "deployment": {
+    "code_and_isolated_runtime_installed": true,
+    "global_mcp_registration_installed": false,
+    "persistent_service_installed": false,
+    "external_http_listener": false,
+    "path_example": "/opt/magnum-go-mcp",
+    "notes": "Deployment observations refer to the tested deployment; path is an anonymized example. Publication preparation does not reconfigure the running server."
+  },
+  "configuration_tests": {
+    "tests": 15,
+    "passed": 15,
+    "real_magnum_requests": 0
+  },
+  "end_to_end_verification": {
+    "all_implemented_operations_verified": true,
+    "target": "Raspberry Pi",
+    "cart_mutations_verified": true,
+    "confirmation_source": "user",
+    "confirmation_date": "2026-10-29"
+  }
+}

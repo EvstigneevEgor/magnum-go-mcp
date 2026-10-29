@@ -1,0 +1,262 @@
+{
+  "provenance": {
+    "application": "MagnumGO APK 4.3.15",
+    "binary": "lib/arm64-v8a/libapp.so",
+    "method": "Static ARM64 AOT disassembly with exact-snapshot Blutter object-pool annotations",
+    "live_api_requests": 0,
+    "credentials_read": false,
+    "http_base_url": "Not independently reverified in this cart-specific analysis; paths below are relative to the existing app API base.",
+    "binary_sha256": "83a226c989e7f9cdbd08851ca69d95654ec6817f696f669da1527cbea5898ad6",
+    "artifact_note": "Artifact names identify the original private analysis notes, not files distributed with this source. The APK and disassembly are not bundled; function addresses and binary hashes preserve the technical provenance."
+  },
+  "common": {
+    "content_type": "application/json",
+    "dio_extra": {
+      "accessToken": true
+    },
+    "dio_extra_note": "Local Dio interceptor metadata; it is not itself an HTTP header or query parameter.",
+    "authorization_note": "These methods request token attachment by the interceptor. Authorization header construction is not repeated in these cart methods.",
+    "concurrency_note": "No revision, ETag or idempotency field is present in the confirmed request maps below. Shared interceptors and server behavior were not proved to provide concurrency protection.",
+    "retry_note": "A response lost after a mutation is uncertain. Do not infer safe automatic mutation retries from the use of PUT."
+  },
+  "endpoints": [
+    {
+      "operation": "get_cart",
+      "method": "GET",
+      "path": "/cart/v2/bymerchant",
+      "query": {
+        "promoCode": "",
+        "platformId": "<Dart int argument>"
+      },
+      "body": null,
+      "response_model": "CartDTO",
+      "evidence": {
+        "api_entry": "0x8a6aec",
+        "query_map": "0x8a6b18..0x8a6b6c",
+        "promoCode_key": "0x8a6b2c (pp+0xe870)",
+        "promoCode_value": "0x8a6b34 (pp+0x958: empty String)",
+        "platformId_key": "0x8a6b40 (pp+0xa0c0)",
+        "platformId_integer_argument": "0x8a6b48..0x8a6b60",
+        "method": "0x8a6be0 (GET)",
+        "content_type": "0x8a6bf0",
+        "path": "0x8a6c04 (pp+0xe878)",
+        "query_dispatch": "0x8a6c18..0x8a6c1c, named queryParameters",
+        "repository": "0x8a6a24; call API at0x8a6a64; response.data map -> CartDTO parser at0x8a6ab0"
+      },
+      "notes": [
+        "Despite the bymerchant suffix, the method supplies platformId, not merchantId.",
+        "The app always sends an empty promoCode from this method; arbitrary promoCode use is not established here."
+      ]
+    },
+    {
+      "operation": "get_merchant_delivery_sum",
+      "method": "GET",
+      "path": "/cart/merchant",
+      "query": {
+        "merchantId": "<Dart int argument>"
+      },
+      "body": null,
+      "response_model": "ShopDeliverySum",
+      "evidence": {
+        "api_entry": "0x8a65a4",
+        "query_map": "0x8a65d0..0x8a6610",
+        "merchantId_key": "0x8a65e4 (pp+0xdb88)",
+        "merchantId_integer_argument": "0x8a65ec..0x8a6604",
+        "method": "0x8a6684 (GET)",
+        "path": "0x8a66a8 (pp+0xe660)",
+        "query_dispatch": "0x8a66bc..0x8a66c0, named queryParameters",
+        "repository": "0x8a6420; response.data map -> ShopDeliverySum parser0x595194"
+      },
+      "notes": [
+        "This response is delivery sums, not the main basket item list."
+      ]
+    },
+    {
+      "operation": "put_cart_item",
+      "method": "PUT",
+      "path": "/cart/v2/item",
+      "query": null,
+      "body": {
+        "itemId": "<Dart int argument>",
+        "quantity": "<Dart int absolute target quantity>"
+      },
+      "response_model": "PutCartResponse",
+      "evidence": {
+        "api_entry": "0x8b2840",
+        "body_map": "0x8b2870..0x8b28d8 (Map<String,int>)",
+        "itemId_key": "0x8b2884 (pp+0xa0a0)",
+        "quantity_key": "0x8b28ac (pp+0xdf20)",
+        "method": "0x8b294c (pp+0x16b48: PUT)",
+        "path": "0x8b2970 (pp+0x17348)",
+        "data_dispatch": "0x8b2980..0x8b2984, named data",
+        "usecase": "0x5c5550..0x5c5590; PutCartItemParams.itemId -> x2 and quantity -> x3",
+        "repository": "0x8b2780; response.data -> PutCartResponse parser0x5c5594",
+        "absolute_quantity": "0x8b3c20..0x8b3d08: current quantity minus ProductMeasureUnit.step at0x8b3cac passed as x7 to CartCubit edit0x8b2124;0x8b24c4..0x8b24cc stores x7 unchanged as PutCartItemParams.quantity",
+        "zero_delete": "0x8b2508..0x8b251c branches to DELETE when requested quantity==0"
+      },
+      "notes": [
+        "This is one shared API method for adding/updating an item. It sends a target quantity, not an increment/decrement delta.",
+        "Application code uses ProductMeasureUnit.step. Piece/weight units must not be guessed from the integer alone.",
+        "No merchantId or platformId is included in this JSON body."
+      ]
+    },
+    {
+      "operation": "delete_cart_item",
+      "method": "DELETE",
+      "path": "/cart/item",
+      "query": null,
+      "body": {
+        "itemId": "<Dart int argument>"
+      },
+      "response_model": "The app awaits the Dio response and returns true; it does not parse a response body in repository0x8a6d24.",
+      "evidence": {
+        "api_entry": "0x8a6d94",
+        "body_map": "0x8a6df0..0x8a6e30 (Map<String,int>)",
+        "itemId_key": "0x8a6e04 (pp+0xa0a0)",
+        "method": "0x8a6e70 (pp+0x89c0: DELETE)",
+        "path": "0x8a6e94 (pp+0xe5f0)",
+        "data_dispatch": "0x8a6ea4..0x8a6ea8, named data",
+        "repository": "0x8a6d24..0x8a6d90",
+        "cubit_wrapper": "0x8a6c38; performs delete-item analytics after usecase. onPage is analytics metadata, not an HTTP body field."
+      },
+      "notes": [
+        "The itemId is a JSON DELETE body, not a query parameter."
+      ]
+    },
+    {
+      "operation": "empty_cart",
+      "method": "PUT",
+      "path": "/cart/empty",
+      "query": null,
+      "body": null,
+      "evidence": {
+        "api_entry": "0x8a6f34",
+        "method": "0x8a6fc4 (PUT)",
+        "path": "0x8a6fe8 (pp+0x17350)",
+        "dispatch": "0x8a6ff0; no data or queryParameters in call descriptor"
+      },
+      "notes": [
+        "Static contract only; no basket was cleared and no mutation was executed."
+      ]
+    }
+  ],
+  "models": {
+    "CartDTO": {
+      "parser": "0x595ae8..0x596328",
+      "numeric_nullable_fields": [
+        "id",
+        "deliveryPrice",
+        "totalPrice",
+        "totalDeposit",
+        "currentCartWeight",
+        "remainingCartWeight",
+        "minOrderPrice",
+        "minFreeDeliveryPrice",
+        "packagingPrice"
+      ],
+      "string_nullable_fields": [
+        "message",
+        "packagingExplanationText"
+      ],
+      "bool_nullable_fields": [
+        "isNeedDeleteAlcohol"
+      ],
+      "item_list_fields": {
+        "availableItems": "List<CartItem>",
+        "deletedItems": "List<CartItem>"
+      },
+      "numeric_note": "The app accepts num? then calls numeric conversion. Numeric currency scaling and weight units are not established by this parser alone.",
+      "serializer": "0x4316fc..0x431970",
+      "serializer_fields": [
+        "id",
+        "availableItems",
+        "deletedItems",
+        "totalPrice",
+        "deliveryPrice",
+        "totalDeposit",
+        "currentCartWeight",
+        "remainingCartWeight"
+      ],
+      "serializer_warning": "Its toJson omits several parsed server fields; a read client must not use toJson fields as the complete response schema."
+    },
+    "CartItem": {
+      "parser": "0x596368..0x5969fc",
+      "numeric_nullable_fields": [
+        "itemId",
+        "deposit",
+        "quantity",
+        "originalQuantity",
+        "totalFullPrice",
+        "fullPrice",
+        "stateId",
+        "grossWeight"
+      ],
+      "object_fields": {
+        "platformItem": "Product; parser0x4c4a90"
+      },
+      "identity_note": "CartItem.itemId is the row's explicit operation identifier. Do not substitute platformItem.id without verifying identity equivalence.",
+      "serializer": "0x4319a4..0x431ab0",
+      "serializer_fields": [
+        "itemId",
+        "deposit",
+        "platformItem",
+        "quantity",
+        "stateId",
+        "originalQuantity",
+        "totalFullPrice",
+        "grossWeight"
+      ],
+      "serializer_warning": "fullPrice is parsed but not emitted in CartItem.toJson."
+    },
+    "PutCartResponse": {
+      "parser": "0x5c5594..0x5c5680",
+      "fields": {
+        "status": "bool, non-null",
+        "message": "String, non-null"
+      },
+      "ui_check": "0x5c540c..0x5c554c checks status and shows the response message on failure; HTTP200 alone is not operation success."
+    },
+    "ProductMeasureUnit": {
+      "serializer": "0x432208..0x432308",
+      "fields": [
+        "id",
+        "valueForPrice",
+        "isDividable",
+        "step",
+        "nameMl",
+        "name",
+        "divideValue",
+        "extId"
+      ],
+      "step_field_offset": "compressed object offset0x13",
+      "quantity_note": "Use the API-provided step and unit information. No universal item quantity or weight conversion is proved here."
+    }
+  },
+  "not_established": [
+    "Current server support or behavior for any of these contracts; no live traffic was sent.",
+    "An HTTP request contract for /cart/alcohol; its string xref at0x8c6730 is only an unanalysed lead.",
+    "Currency scaling, precise grossWeight/currentCartWeight unit, or all ProductMeasureUnit arithmetic semantics.",
+    "Server-side optimistic concurrency, revision checking, or mutation idempotence."
+  ],
+  "evidence_files": {
+    "get-cart.asm": "aot-8a6aec-8a6c50.asm",
+    "cart-read-and-delete-api.asm": "aot-8a63f0-8a7090.asm",
+    "put-cart-api-and-repository.asm": "aot-8b26d0-8b2ad0.asm",
+    "cart-and-item-parsers.asm": "aot-595ae8-5968e0.asm",
+    "cart-item-parser-tail.asm": "aot-5968e0-596a70.asm",
+    "cart-and-item-serializers.asm": "aot-4316fc-431cf0.asm",
+    "put-cart-response-parser.asm": "aot-5c5594-5c5690.asm",
+    "put-cart-usecase.asm": "aot-5c5550-5c5594.asm",
+    "put-cart-response-ui.asm": "aot-5c540c-5c5610.asm",
+    "absolute-quantity-ui.asm": "aot-8b3b20-8b3e40.asm",
+    "product-measure-unit-serializer.asm": "aot-432208-432354.asm",
+    "delete-cubit-and-repository.asm": "aot-8a6c38-8a6d94.asm",
+    "cart-cubit-edit-quantity-and-delete.asm": "aot-8b2124-8b26d0.asm"
+  },
+  "representation_notes": {
+    "prices": "Cart monetary values are preserved in raw API units in MCP cart results. Product price display divides the raw number by100 and appends the tenge sign; this is independently proven in catalog-protocol-evidence.json at0x64e134. Product MCP results expose price_raw and Decimal-derived price_kzt. Do not apply a guessed scale to cart weight/quantity fields.",
+    "quantity": "PUT /cart/v2/item sends an absolute integer target in the product API units, not a delta. The UI changes targets by ProductMeasureUnit.step; zero uses DELETE /cart/item with a JSON itemId body. No universal kilograms-to-quantity conversion is established.",
+    "row_identity": "Use the explicit CartItem.itemId for writes. Product.itemId from a search/category result is also the argument to the normal product-detail route /catalog/client/platformItem/{item_id}; the separate /platformItem/item/{item_id}?platformId route belongs to the app deep-link branch.",
+    "verification": "This evidence was recovered statically. This analysis sent no cart mutations or other live requests."
+  }
+}
