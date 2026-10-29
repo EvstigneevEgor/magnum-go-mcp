@@ -1,7 +1,7 @@
 """Offline request-policy tests using synthetic clocks and private temp files.
 
 No HTTP, session, credentials or real interval sleeps are used. Linux
-file-lock tests run on the Pi; memory-path and corrupt-file tests run everywhere.
+file-lock tests run on Linux; memory-path and corrupt-file tests run everywhere.
 """
 
 import json

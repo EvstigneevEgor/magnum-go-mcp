@@ -10,7 +10,7 @@
         "ConnectTimeout=10",
         "-o",
         "StrictHostKeyChecking=yes",
-        "<user>@pi-host",
+        "<user>@server-host",
         "/opt/magnum-go-mcp/.venv/bin/python",
         "/opt/magnum-go-mcp/magnum_mcp.py"
       ],

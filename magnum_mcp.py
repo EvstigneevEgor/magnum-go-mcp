@@ -32,7 +32,7 @@ server = MCPServer(
     instructions=(
         "Use auth_status to inspect local session readiness. "
         "On the user's request, start_login opens a one-time local login flow. "
-        "Show its login_url to the user; with a remote Raspberry Pi it needs "
+        "Show its login_url to the user; with a remote Linux server it needs "
         "a loopback SSH port forward. Never request a phone number, SMS code, or token "
         "in the conversation. Local session readiness does not prove that "
         "the service has accepted the session. "
@@ -156,7 +156,7 @@ def start_login() -> dict:
             "state": "login_pending",
             "login_url": url,
             "expires_in_seconds": None,
-            "remote_access": "For a remote Pi, forward local 127.0.0.1:8765 to Pi 127.0.0.1:8765 through SSH.",
+            "remote_access": "For a remote Linux server, forward local 127.0.0.1:8765 to the server's 127.0.0.1:8765 through SSH.",
         }
 
 

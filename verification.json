@@ -1,22 +1,6 @@
 {
   "date": "2026-10-29",
-  "target": "Raspberry Pi, Linux aarch64, Python 3.13.5, systemd 257",
-  "offline_suite_on_pi": {
-    "tests": 199,
-    "passed": 199,
-    "skipped": 0,
-    "failed": 0,
-    "mcp_sdk": "2.3.0",
-    "real_magnum_requests": 0
-  },
-  "rate_policy_regression_on_pi": {
-    "tests": 21,
-    "passed": 21,
-    "skipped": 0,
-    "failed": 0,
-    "configured_default_seconds": 0.5,
-    "real_magnum_requests": 0
-  },
+  "target": "Linux aarch64, Python 3.13.5, systemd 257",
   "live_user_auth": {
     "browser_login": true,
     "user_entered_phone_and_sms": true,
@@ -149,9 +133,25 @@
   },
   "end_to_end_verification": {
     "all_implemented_operations_verified": true,
-    "target": "Raspberry Pi",
+    "target": "Linux server",
     "cart_mutations_verified": true,
     "confirmation_source": "user",
     "confirmation_date": "2026-10-29"
+  },
+  "offline_suite_on_linux": {
+    "tests": 199,
+    "passed": 199,
+    "skipped": 0,
+    "failed": 0,
+    "mcp_sdk": "2.3.0",
+    "real_magnum_requests": 0
+  },
+  "rate_policy_regression_on_linux": {
+    "tests": 21,
+    "passed": 21,
+    "skipped": 0,
+    "failed": 0,
+    "configured_default_seconds": 0.5,
+    "real_magnum_requests": 0
   }
 }
